@@ -1,0 +1,13 @@
+# Secrets
+*.tfvars
+**/*.tfvars.*
+
+# Files
+*.tfstate
+*.tfstate.backup
+*.terraform.lock.hcl
+*.tfplan
+
+# Folders
+.terraform/
+*.tfstate.d/
