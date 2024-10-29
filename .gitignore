@@ -1,3 +1,6 @@
+# Remove after completion
+README_temp.md
+
 # Secrets
 *.tfvars
 **/*.tfvars.*
