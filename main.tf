@@ -399,6 +399,10 @@ resource "azurerm_mssql_database" "db" {
 # get, list, create, delete, update, recover, purge and getRotationPolicy for 
 # the key vault key and also add a key vault access policy for the Microsoft Sql 
 # Server instance User Managed Identity to get, wrap, and unwrap key(s)
+
+# Create a Client config for use with Key Vault
+data "azurerm_client_config" "current" {}
+
 resource "azurerm_key_vault" "kv_web" {
   name         = terraform.workspace == "default" ? "kv-${var.db_name}${random_string.random_string.result}" : "kv-${var.db_name}${terraform.workspace}${random_string.random_string.result}"
   location                    = azurerm_resource_group.rg_web.location
@@ -414,14 +418,22 @@ resource "azurerm_key_vault" "kv_web" {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = data.azurerm_client_config.current.object_id
 
-    key_permissions = ["Get", "List", "Create", "Delete", "Update", "Recover", "Purge", "GetRotationPolicy"]
-  }
+    key_permissions = [
+      "Get",
+    ]
 
-  access_policy {
-    tenant_id = azurerm_user_assigned_identity.db_cred_web.tenant_id
-    object_id = azurerm_user_assigned_identity.db_cred_web.principal_id
+    secret_permissions = [
+      "Set",
+      "Get",
+      "Delete",
+      "Purge",
+      "Recover",
+      "List",
+    ]
 
-    key_permissions = ["Get", "WrapKey", "UnwrapKey"]
+    storage_permissions = [
+      "Get",
+    ]
   }
 }
 
