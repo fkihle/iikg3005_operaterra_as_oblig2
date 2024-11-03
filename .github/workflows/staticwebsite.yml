@@ -8,21 +8,22 @@ on:
       - 'staticwebsite'
 
   # Allows manual running of workflow from Actions tab
-  workflow_dispatch:
-    inputs:
-      action_type:
-        description: 'Which action to perform? (apply/destroy)'
-        required: true
-        default: 'apply'
-        type: choice
-        options:
-          - 'apply'
-          - 'destroy'
+  #workflow_dispatch:
+  #  inputs:
+  #    action_type:
+  #      description: 'Which action to perform? (apply/destroy)'
+  #      required: true
+  #      default: 'apply'
+  #      type: choice
+  #      options:
+  #        - 'apply'
+  #        - 'destroy'
 
 # A workflow run consists of one or more jobs that run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  resourcegroups:
+  #resourcegroups:
+  terraform:
     # The type of runner tasked with the job
     runs-on: ubuntu-latest
 
@@ -50,14 +51,25 @@ jobs:
         run: terraform plan
         working-directory: ${{ env.WORKING_DIR }}
 
-      - name: 'Terraform apply'
-        if: github.event.inputs.action_type == 'apply'
-        id: apply
-        run: terraform apply -auto-approve
-        working-directory: ${{ env.WORKING_DIR }}
+      # - name: 'Terraform apply'
+      #   if#: github.event.inputs.action_type == 'apply'
+      #   id: apply
+      #   run: terraform apply -auto-approve
+      #   working-directory: $#{{ env.WORKING_DIR }}
 
-      - name: 'Terraform destroy'
-        if: github.event.inputs.action_type == 'destroy'
-        id: destroy
-        run: terraform destroy -auto-approve
-        working-directory: ${{ env.WORKING_DIR }}
+      # - name: 'Terraform destroy'
+      #   if#: github.event.inputs.action_type == 'destroy'
+      #   id: destroy
+      #   run: terraform destroy -auto-approve
+      #   working-directory: $#{{ env.WORKING_DIR }}
+
+      - name: 'Check last commit message'
+        id: commit
+        run: echo "::set-output name=message::$(git log --format=%B -n 1)"
+      - name: 'Conditionally run Terraform action'
+        run: |
+          if [[ "${{ steps.commit.outputs.message }}" == *"destroy"* ]]; then
+            terraform destroy -auto-approve
+          else
+            terraform apply -auto-approve
+          fi
