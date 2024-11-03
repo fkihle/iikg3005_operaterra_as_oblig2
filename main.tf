@@ -24,7 +24,7 @@
 # Additionally, use remote state storage with Azure Storage Account.
 
 # The main focus for this assignment is to implement a CI/CD pipeline using GitHub Actions or simular available tools
-# (Digger etc.).
+# (Digger etc).
 
 # For infrastructure configuration it should be created branches (remember good naming convention and life
 # cycle) that should undergo code reviews (terraform fmt, terraform validate and tflint/tfsec) before they are
