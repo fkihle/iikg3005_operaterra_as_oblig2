@@ -1,0 +1,40 @@
+name: validate
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+on:
+    push:
+        paths:
+            - '.' # This triggers the workflow on any push to the repository
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+    # This workflow contains a single job called "validate"
+    validate:
+        # The type of runner that the job will run on
+        runs-on: ubuntu-latest
+
+        name: 'validate'
+        env:
+            ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+            ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+            ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+            ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+            WORKING_DIR: ./
+
+        # Steps represent a sequence of tasks that will be executed as part of the job
+        steps:
+            # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+            - uses: actions/checkout@v4
+
+            # Initializes Terraform
+            - name: 'Terraform init'
+              id: init
+              run: terraform init
+              working-directory: ${{ env.WORKING_DIR }}
+
+            # Runs a single command using the runners shell
+            - name: Validate Terraform configuration
+              id: validate
+              run: terraform validate
+              working-directory: ${{ env.WORKING_DIR }}
+              
