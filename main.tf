@@ -1,7 +1,3 @@
-# The platform requires a web application, 
-# a database for product information and user data, 
-# and a storage solution for product images.
-
 # Requirements
 # The infrastructure components you need to set up include 
 # a Virtual Network with proper subnets,
