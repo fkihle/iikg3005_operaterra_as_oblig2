@@ -1,0 +1,49 @@
+name: web
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events on the main branch
+  push:
+    paths:
+      - 'staticwebsite'
+
+  # Allows manual running of workflow from Actions tab
+  workflow_dispatch:
+
+# A workflow run consists of one or more jobs that run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  resourcegroups:
+    # The type of runner tasked with the job
+    runs-on: ubuntu-latest
+
+    name: 'web'
+    env:
+      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      WORKING_DIR: ./staticwebsite
+
+    # Steps are the sequence of tasks to be executed as part of the job
+    steps:
+      # Copy repo contents in $GITHUB_WORKSPACE, for access in "runner"
+      - uses: actions/checkout@v4
+
+      # Runs command using the "runners" shell
+      - name: 'Terraform init'
+        id: init
+        run: terraform init
+        working-directory: ${{ env.WORKING_DIR }}
+
+      - name: 'Terraform plan'
+        id: plan
+        run: terraform plan
+        working-directory: ${{ env.WORKING_DIR }}
+
+      - name: 'Terraform apply'
+        id: apply
+        run: terraform apply -auto-approve
+        working-directory: ${{ env.WORKING_DIR }}
+        
+    
