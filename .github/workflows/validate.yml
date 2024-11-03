@@ -4,7 +4,7 @@ name: validate
 on:
     push:
         paths:
-            - '.' # This triggers the workflow on any push to the repository
+            - '**' # This triggers the workflow on any change in the repository
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -19,7 +19,7 @@ jobs:
             ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
             ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
             ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-            WORKING_DIR: .
+            WORKING_DIR: $GITHUB_WORKSPACE
 
         # Steps represent a sequence of tasks that will be executed as part of the job
         steps:
