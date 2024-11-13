@@ -1,4 +1,4 @@
-name: Terraform CI/CD
+name: Dev Stage Prod Web
 
 on:
     push:
