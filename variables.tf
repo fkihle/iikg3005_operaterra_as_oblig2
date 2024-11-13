@@ -2,7 +2,6 @@
 variable "subscription_id" {
   type        = string
   description = "The subscription GUID for connection to Azure tennant"
-  default     = "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/subscription"
 }
 
 # RESOURCE GROUP
