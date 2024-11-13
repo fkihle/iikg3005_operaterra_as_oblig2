@@ -16,20 +16,15 @@ resource "azurerm_storage_account" "sa_web" {
   account_tier             = "Standard"
   account_replication_type = "GRS"
 
+  static_website {
+    index_document = var.index_document
+  }
+
   tags = var.common_tags
-}
-
-# Enable static website hosting
-resource "azurerm_storage_account_static_website" "static_website" {
-  depends_on         = [azurerm_storage_account.sa_web]
-  storage_account_id = azurerm_storage_account.sa_web.id
-
-  index_document = var.index_document
 }
 
 # Blob storage used for the website.
 resource "azurerm_storage_blob" "index_html" {
-  depends_on             = [azurerm_storage_account_static_website.static_website]
   name                   = var.index_document
   storage_account_name   = azurerm_storage_account.sa_web.name
   storage_container_name = "$web" # Special function that allows for static website

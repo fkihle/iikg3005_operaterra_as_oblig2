@@ -101,7 +101,7 @@ resource "azurerm_service_plan" "sp_web" {
 
 # Create network from module
 module "Network" {
-  source = "./Network"
+  source = "./modules/Network"
 
   vnet_range    = var.vnet_range
   subnet_ranges = var.subnet_ranges
@@ -123,7 +123,7 @@ module "Network" {
 ################
 
 module "LoadBalancer" {
-  source = "./LoadBalancer"
+  source = "./modules/LoadBalancer"
 
   rg_name      = azurerm_resource_group.rg_web.name
   location     = azurerm_resource_group.rg_web.location
@@ -141,7 +141,7 @@ module "LoadBalancer" {
 ################
 
 module "Storage" {
-  source = "./Storage"
+  source = "./modules/Storage"
 
   rg_name      = azurerm_resource_group.rg_web.name
   location     = azurerm_resource_group.rg_web.location
@@ -162,7 +162,7 @@ module "Storage" {
 ################
 
 module "Database" {
-  source = "./Database"
+  source = "./modules/Database"
 
   rg_name      = azurerm_resource_group.rg_web.name
   location     = azurerm_resource_group.rg_web.location

@@ -36,10 +36,10 @@ resource "random_password" "sql_password" {
   override_special = "_%@"
 }
 
-resource "azurerm_mssql_virtual_network_rule" "sql_vnet_rule" {
-  depends_on = [azurerm_mssql_database.sql_db]
+# resource "azurerm_mssql_virtual_network_rule" "sql_vnet_rule" {
+#   depends_on = [azurerm_mssql_database.sql_db]
 
-  name      = "sql-vnet-rule-${var.project_name}"
-  server_id = azurerm_mssql_server.sql_server.id
-  subnet_id = var.subnet_id
-}
+#   name      = "sql-vnet-rule-${var.project_name}"
+#   server_id = azurerm_mssql_server.sql_server.id
+#   subnet_id = var.subnet_id
+# }
