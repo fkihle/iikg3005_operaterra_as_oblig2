@@ -38,11 +38,15 @@ variable "location" {
 variable "vnet_range" {
   type        = string
   description = "The range of the virtual network"
+  default = "10.0.0.0/24"
 }
 
 variable "subnet_ranges" {
   type        = list(string)
   description = "The ranges of the subnets"
+  default = [ 
+    "10.0.0.0/25",
+    "10.0.0.128/25", ]
 }
 
 # WEB

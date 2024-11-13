@@ -1,9 +1,10 @@
 locals {
   common_tags = {
-    company_name = var.company_name
-    department   = var.department
+    company_name = "Opera Terra AS"
+    department   = "it"
+    project_name = "fk2"
+    project_id   = "00042"
     costcenter   = "${var.department}${var.project_id}"
-    project_name = var.project_name
     environment  = terraform.workspace == "default" ? "" : terraform.workspace
   }
 
