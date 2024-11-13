@@ -66,3 +66,19 @@ terraform workspace show
 ## Github Workflows
 
 Github workflow doesn't work if the resources already exist, why?
+
+## TFSEC
+
+Run powershell as Administrator
+
+```powershell
+choco install tfsec
+```
+
+## TFLINT
+
+Run powershell as Administrator
+
+```powershell
+choco install tflint
+```

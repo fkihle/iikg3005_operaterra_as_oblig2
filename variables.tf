@@ -15,24 +15,19 @@ variable "location" {
 variable "vnet_range" {
   type        = string
   description = "The range of the virtual network"
-  default = "10.0.0.0/24"
+  default     = "10.0.0.0/24"
 }
 
 variable "subnet_ranges" {
   type        = list(string)
   description = "The ranges of the subnets"
-  default = [ 
+  default = [
     "10.0.0.0/25",
-    "10.0.0.128/25", ]
+    "10.0.0.128/25",
+  ]
 }
 
 # WEB
-variable "source_content" {
-  type        = string
-  description = "Source content for the index.html file"
-  default     = "<h1>Default content - CI/CD</h1>"
-}
-
 variable "index_document" {
   type        = string
   description = "Name of the index document"
@@ -50,7 +45,7 @@ variable "company_name" {
   type        = string
   description = "The name of the company"
   default     = "Opera Terra AS"
-  
+
 }
 
 variable "department" {
@@ -64,10 +59,3 @@ variable "project_id" {
   description = "The project ID"
   default     = "00042"
 }
-
-variable "costcenter" {
-  type        = string
-  description = "The cost center"
-  default     = "it-00001"
-}
-

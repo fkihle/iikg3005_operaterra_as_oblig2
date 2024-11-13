@@ -51,7 +51,7 @@
 # Random string of length 9 to make it more secure. 
 # No uppercase or specialcases allowed. Intented to be unique.
 resource "random_string" "random_string" {
-  length  = 10
+  length  = 9
   special = false
   upper   = false
 }
@@ -114,7 +114,7 @@ module "Network" {
   project_name = var.project_name
   common_tags  = local.common_tags
 
-  source_content = var.source_content
+  source_content = local.source_content
 }
 
 
@@ -132,7 +132,7 @@ module "LoadBalancer" {
   location     = azurerm_resource_group.rg_web.location
   project_name = var.project_name
   common_tags  = local.common_tags
-  
+
 }
 
 
@@ -151,9 +151,9 @@ module "Storage" {
   project_name = var.project_name
   common_tags  = local.common_tags
 
-  source_content = var.source_content
+  source_content = local.source_content
   index_document = var.index_document
-  
+
 }
 
 
@@ -170,6 +170,7 @@ module "Database" {
   rg_name      = azurerm_resource_group.rg_web.name
   location     = azurerm_resource_group.rg_web.location
   project_name = var.project_name
+  subnet_id    = module.Network.subnet_id
   common_tags  = local.common_tags
 }
 
