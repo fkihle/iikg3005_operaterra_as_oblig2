@@ -1,17 +1,7 @@
-# Requirements
-# The infrastructure components you need to set up include 
-#+++ a Virtual Network with proper subnets,
-#+++ an Azure Service
-#+++ Plan for hosting the web application, 
-# an SQL Database for storing product and user data,
-#+++ and an Load Balancer in front of the web application.
+# TODO
 
-# You are required to implement this infrastructure for three environments: 
-# Development (dev), 
-# Staging, 
-# and Production (prod).
-
-# Additionally, use remote state storage with Azure Storage Account.
+# Load Balancer in front of the web application.
+# use remote state storage with Azure Storage Account.
 
 # For infrastructure configuration it should be created branches (remember good naming convention and life
 # cycle) that should undergo code reviews (terraform fmt, terraform validate and tflint/tfsec) before they are
@@ -96,7 +86,7 @@ resource "azurerm_resource_group" "rg_web" {
 
 # Create a service plan for the web application.
 resource "azurerm_service_plan" "sp_web" {
-  name                = "sp-${local.project_name}"
+  name                = "sp-${var.project_name}"
   resource_group_name = azurerm_resource_group.rg_web.name
   location            = azurerm_resource_group.rg_web.location
   os_type             = "Linux"
@@ -107,58 +97,24 @@ resource "azurerm_service_plan" "sp_web" {
 
 
 
+
 ################
 ##### NETWORK ################################
 ################
 
-# Create a VNET
-resource "azurerm_virtual_network" "vnet" {
-  name                = "vnet-${local.project_name}"
-  resource_group_name = azurerm_resource_group.rg_web.name
-  location            = azurerm_resource_group.rg_web.location
-  address_space       = [var.vnet_range]
+# Create network from module
+module "Network" {
+  source = "./Network"
 
-  tags = local.common_tags
-}
+  vnet_range    = var.vnet_range
+  subnet_ranges = var.subnet_ranges
 
-# Create subnets
-resource "azurerm_subnet" "subnets" {
-  count = length(var.subnet_ranges)
+  rg_name      = azurerm_resource_group.rg_web.name
+  location     = azurerm_resource_group.rg_web.location
+  project_name = var.project_name
+  common_tags  = local.common_tags
 
-  name                 = "snet-${local.project_name}-${count.index}"
-  virtual_network_name = azurerm_virtual_network.vnet.name
-  resource_group_name  = azurerm_resource_group.rg_web.name
-  address_prefixes     = [var.subnet_ranges[count.index]]
-
-  service_endpoints = ["Microsoft.Storage"]
-}
-
-# Create a Network Security Group for all subnets
-resource "azurerm_network_security_group" "nsg" {
-  name                = "nsg-${var.project_name}"
-  resource_group_name = azurerm_resource_group.rg_web.name
-  location            = var.location
-
-  security_rule {
-    name                       = "sec-rule-HTTP-${var.project_name}"
-    priority                   = 100
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "80"
-    source_address_prefix      = "*"
-    destination_address_prefix = "*"
-    description                = "network-security-rule-http"
-  }
-}
-
-# Associate NSG with each subnet
-resource "azurerm_subnet_network_security_group_association" "nsg_association" {
-  count = length(azurerm_subnet.subnets)
-
-  subnet_id                 = azurerm_subnet.subnets[count.index].id
-  network_security_group_id = azurerm_network_security_group.nsg.id
+  source_content = var.source_content
 }
 
 
@@ -169,32 +125,14 @@ resource "azurerm_subnet_network_security_group_association" "nsg_association" {
 ##### LOAD BALANCER ################################
 ################
 
-resource "azurerm_public_ip" "lb_public_ip" {
-  name                = "PublicIPForLB-${local.project_name}"
-  location            = azurerm_resource_group.rg_web.location
-  resource_group_name = azurerm_resource_group.rg_web.name
-  allocation_method   = "Static"
-  sku = "Standard"
+module "LoadBalancer" {
+  source = "./LoadBalancer"
 
-  tags = local.common_tags
-}
-
-resource "azurerm_lb" "lb" {
-
-  name                = "LB-${local.project_name}"
-  location            = azurerm_resource_group.rg_web.location
-  resource_group_name = azurerm_resource_group.rg_web.name
-  sku = "Standard"
-
-  frontend_ip_configuration {
-    name                 = "PublicIPAddress"
-    public_ip_address_id = azurerm_public_ip.lb_public_ip.id
-
-  }
-}
-
-output "lb_public_ip" {
-  value = azurerm_public_ip.lb_public_ip.ip_address
+  rg_name      = azurerm_resource_group.rg_web.name
+  location     = azurerm_resource_group.rg_web.location
+  project_name = var.project_name
+  common_tags  = local.common_tags
+  
 }
 
 
@@ -205,47 +143,18 @@ output "lb_public_ip" {
 ##### STORAGE ACCOUNT ################################
 ################
 
-# Create storage account for the website.
-resource "azurerm_storage_account" "sa_web" {
-  name                     = "sa${local.project_name}${random_string.random_string.result}"
-  resource_group_name      = azurerm_resource_group.rg_web.name
-  location                 = azurerm_resource_group.rg_web.location
-  min_tls_version          = "TLS1_2" # Fixes critical error in Terraform Config
-  account_tier             = "Standard"
-  account_replication_type = "GRS"
+module "Storage" {
+  source = "./Storage"
 
-  tags = local.common_tags
-}
+  rg_name      = azurerm_resource_group.rg_web.name
+  location     = azurerm_resource_group.rg_web.location
+  project_name = var.project_name
+  common_tags  = local.common_tags
+
+  source_content = var.source_content
+  index_document = var.index_document
   
-# Enable static website hosting
-resource "azurerm_storage_account_static_website" "static_website" {
-    depends_on           = [azurerm_storage_account.sa_web]
-    storage_account_id = azurerm_storage_account.sa_web.id
-  
-    index_document = var.index_document
-  }
-
-# Blob storage used for the website.
-resource "azurerm_storage_blob" "index_html" {
-  depends_on = [ azurerm_storage_account_static_website.static_website ]
-  name                   = var.index_document
-  storage_account_name   = azurerm_storage_account.sa_web.name
-  storage_container_name = "$web" # Special function that allows for static website
-  type                   = "Block"
-  content_type           = "text/html"
-  source_content         = "${local.source_content} <br> <h3> Workspace: ${terraform.workspace}</h3>" # Content of the website here
 }
-
-# Output of the web endpoint so that the user can visit it. 
-# Also se this in Azure Portal inside the webcontainer.
-output "primary_web_endpoint" {
-  value = azurerm_storage_account.sa_web.primary_web_endpoint
-}
-
-
-
-
-
 
 
 
@@ -255,47 +164,13 @@ output "primary_web_endpoint" {
 ##### DATABASE ################################
 ################
 
-# Create a SQL Server
-resource "azurerm_mssql_server" "sql_server" {
-  name                         = "sql-${local.project_name}"
-  resource_group_name          = azurerm_resource_group.rg_web.name
-  location                     = azurerm_resource_group.rg_web.location
-  version                      = "12.0"
-  administrator_login          = "4dm1n157r47erDude"
-  administrator_login_password = "SupDupePassForSq1Pl3as3Ch4ng3M3" # change this to a random password
+module "Database" {
+  source = "./Database"
 
-  tags = local.common_tags
-}
-
-
-# Create a SQL Database
-resource "azurerm_mssql_database" "sql_db" {
-  name                = "sqldb-${local.project_name}"
-  server_id = azurerm_mssql_server.sql_server.id
-  collation           = "SQL_Latin1_General_CP1_CI_AS"
-  license_type = "LicenseIncluded"
-  max_size_gb  = 2
-  sku_name     = "S0"
-  enclave_type = "VBS"
-
-  tags = local.common_tags
-  
-  # prevent the possibility of accidental data loss when set to true
-  lifecycle {
-    prevent_destroy = false
-  }
-}
-
-# Generate a random password for the SQL Server
-resource "random_password" "sql_password" {
-  length           = 16
-  special          = true
-  override_special = "_%@"
-}
-
-# Output of the SQL Server FQDN
-output "sql_server_fqdn" {
-  value = azurerm_mssql_server.sql_server.fully_qualified_domain_name
+  rg_name      = azurerm_resource_group.rg_web.name
+  location     = azurerm_resource_group.rg_web.location
+  project_name = var.project_name
+  common_tags  = local.common_tags
 }
 
 
