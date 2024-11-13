@@ -5,28 +5,6 @@ variable "subscription_id" {
   default     = "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/subscription"
 }
 
-# COMMON TAGS
-variable "company_name" {
-  type        = string
-  description = "The name of the company"
-}
-
-variable "project_name" {
-  type        = string
-  description = "The name of the project"
-}
-
-variable "project_id" {
-  type        = string
-  description = "The project ID"
-}
-
-variable "department" {
-  type        = string
-  description = "The department"
-  default     = "it"
-}
-
 # RESOURCE GROUP
 variable "location" {
   type        = string
@@ -53,7 +31,7 @@ variable "subnet_ranges" {
 variable "source_content" {
   type        = string
   description = "Source content for the index.html file"
-  default     = "<h1>Made with Terraform - CI/CD - update del 2</h1>"
+  default     = "<h1>Default content - CI/CD</h1>"
 }
 
 variable "index_document" {
