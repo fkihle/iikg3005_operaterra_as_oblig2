@@ -89,5 +89,5 @@ jobs:
             
             - name: Get web endpoint
               id: get_web_endpoint
-              run: echo "::set-output name=WEB_ENDPOINT::$(terraform output -raw primary_web_endpoint)"
+              run: echo "WEB_ENDPOINT=$(terraform output -raw primary_web_endpoint)"
               working-directory: ${{ env.WORKING_DIR }}

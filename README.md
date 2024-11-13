@@ -63,8 +63,6 @@ terraform workspace select prod
 terraform workspace show
 ```
 
-## Plan with user defined tfvars file
+## Github Workflows
 
-```hsl
-terraform plan -var-file="dev.tfvars"
-```
+Github workflow doesn't work if the resources already exist, why?
