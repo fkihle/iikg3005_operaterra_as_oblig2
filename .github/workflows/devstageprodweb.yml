@@ -28,7 +28,7 @@ jobs:
               working-directory: ${{ env.WORKING_DIR }}
 
             - name: Terraform Apply dev
-              run: terraform apply -auto-approve -var="subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}"
+              run: terraform apply -auto-approve -var="subscription_id=${{ env.ARM_SUBSCRIPTION_ID }}"
               working-directory: ${{ env.WORKING_DIR }}
 
             - name: Test dev
@@ -52,7 +52,7 @@ jobs:
               working-directory: ${{ env.WORKING_DIR }}
 
             - name: Terraform Apply stage
-              run: terraform apply -auto-approve -var="subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}"
+              run: terraform apply -auto-approve -var="subscription_id=${{ env.ARM_SUBSCRIPTION_ID }}"
               working-directory: ${{ env.WORKING_DIR }}
 
             - name: Test stage
@@ -79,7 +79,7 @@ jobs:
               working-directory: ${{ env.WORKING_DIR }}
 
             - name: Terraform Apply prod
-              run: terraform apply -auto-approve -var="subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}"
+              run: terraform apply -auto-approve -var="subscription_id=${{ env.ARM_SUBSCRIPTION_ID }}"
               working-directory: ${{ env.WORKING_DIR }}
 
             - name: Test prod
