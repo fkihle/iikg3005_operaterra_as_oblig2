@@ -82,3 +82,37 @@ Run powershell as Administrator
 ```powershell
 choco install tflint
 ```
+
+
+## Valg av folder structure
+
+### Alternative Two
+
+```
+azure-terraform-project/
+│
+├── modules/
+│   ├── networking/
+│   ├── app_service/
+│   ├── database/
+│   ├── storage/
+│   └── nn/
+│
+├── deployments/
+│   ├── main.tf
+│   ├── variables.tf
+│   ├── outputs.tf
+│   │
+│   ├── terraform.tfvars.dev
+│   ├── terraform.tfvars.stage
+│   └── terraform.tfvars.prod
+│
+├── global/
+│   └── main.tf
+│
+└── README.md
+```
+
+Ryddigste oppsettet å følge etter min mening. Her er det tfvars filene som gjør
+den store jobben. I et prosjekt men behov for større grunnleggende endringer burde
+nok alt deles inn i egne environment baserte folders.

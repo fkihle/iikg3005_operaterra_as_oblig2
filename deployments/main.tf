@@ -9,13 +9,10 @@
 
 # Create Pull Request to perform merging with environment branches.
 
-# Merging with environment branches should trigger a workflow that will plan and apply infrastructure to
-# workspaces except prod
-# For deoployment of infrastructure in prod it must be aproved by a minimum of one person.
+
 # An important part of this assignment is to analyze and discuss the three provided folder structure alternatives. You
 # should choose one and justify your decision based on scalability, maintainability, separation of concerns, and ease of
 # implementing CI/CD.
-# Project folder struction alternatives
 
 # Deliverables
 
