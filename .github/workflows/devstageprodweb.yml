@@ -45,7 +45,7 @@ jobs:
 
             - name: Terraform Destroy dev
               if: github.event.inputs.action_type == 'destroy'
-              run: terraform destroy -auto-approve -var="subscription_id=${{ env.ARM_SUBSCRIPTION_ID }}"
+              run: terraform destroy -auto-approve -var="subscription_id=${{ env.ARM_SUBSCRIPTION_ID }}" -var="workspace=dev"
               working-directory: ${{ env.WORKING_DIR }}
 
     stage_prod:
@@ -75,7 +75,7 @@ jobs:
 
             - name: Terraform Destroy stage
               if: github.event.inputs.action_type == 'destroy'
-              run: terraform destroy -auto-approve -var="subscription_id=${{ env.ARM_SUBSCRIPTION_ID }}"
+              run: terraform destroy -auto-approve -var="subscription_id=${{ env.ARM_SUBSCRIPTION_ID }}" -var="workspace=stage"
               working-directory: ${{ env.WORKING_DIR }}
     
 
@@ -115,5 +115,5 @@ jobs:
 
             - name: Terraform Destroy prod
               if: github.event.inputs.action_type == 'destroy'
-              run: terraform destroy -auto-approve -var="subscription_id=${{ env.ARM_SUBSCRIPTION_ID }}"
+              run: terraform destroy -auto-approve -var="subscription_id=${{ env.ARM_SUBSCRIPTION_ID }}" -var="workspace=prod"
               working-directory: ${{ env.WORKING_DIR }}
