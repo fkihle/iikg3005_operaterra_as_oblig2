@@ -5,99 +5,60 @@ variable "subscription_id" {
   default     = "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/subscription"
 }
 
-# COMMON TAG variables
+# COMMON TAGS
 variable "company_name" {
   type        = string
-  description = "Company name"
-}
-
-# Departmant of the organisation 
-variable "department" {
-  type        = string
-  description = "Department that the resource belongs to."
-
-  validation {
-    condition     = contains(["it", "rnd", "finance", "hr"], var.department)
-    error_message = "Incorrect department given. Please choose from: it, rnd, finance, hr."
-  }
-}
-
-variable "costcenter" {
-  type        = string
-  description = "Department name used for accounting (inherited from ResourceGroup module)"
-  default     = "IT"
+  description = "The name of the company"
 }
 
 variable "project_name" {
   type        = string
-  description = "Project name used for all resources (inherited from ResourceGroup module)"
-  default     = "Unnamed project"
+  description = "The name of the project"
 }
 
-# RESOURCE GROUP variables
+variable "project_id" {
+  type        = string
+  description = "The project ID"
+}
+
+variable "department" {
+  type        = string
+  description = "The department"
+  default     = "it"
+}
+
+# RESOURCE GROUP
 variable "location" {
   type        = string
-  description = "Area for hosting the project resources"
+  description = "Location of the resource group"
   default     = "westeurope"
 }
 
-# Resource groupe name
-variable "rg_name" {
-  type        = string
-  description = "Name of the resource group"
-  default     = "web"
-}
-
-# Storage Account Name
-variable "sa_name" {
-  type        = string
-  description = "Storage account name"
-  default     = "sa"
-}
-
-# NETWORK variables
+# NETWORK
 variable "vnet_range" {
   type        = string
-  description = "Desired virtual network range"
-  default     = "10.0.0.0/24"
+  description = "The range of the virtual network"
 }
 
 variable "subnet_ranges" {
   type        = list(string)
-  description = "List of desired subnet ranges"
-  default     = ["10.0.0.0/25", "10.0.0.128/25"]
+  description = "The ranges of the subnets"
 }
 
-# DATABASE variables
-variable "db_name" {
+# WEB
+variable "source_content" {
   type        = string
-  description = "Name of the database"
-  default     = "unnamed"
-  
+  description = "Source content for the index.html file"
+  default     = "<h1>Made with Terraform - CI/CD - update del 2</h1>"
 }
 
-# WEB APP variables
 variable "index_document" {
   type        = string
-  description = "Name of the index html document"
+  description = "Name of the index document"
   default     = "index.html"
 }
 
-variable "source_content" {
-  type        = string
-  description = "Content of the website"
-  default     = "<h1>Terraform - CI/CD</h1>"
 
-}
 
-# variable "subnet_ids" {    # TODO: Associate Key Vault to subnets
-#   type        = list(string)
-#   description = "List of subnet IDs"
-# }
 
-# VIRTUAL MACHINE variables
-# variable "vm_names" {
-#   type        = list(string)
-#   description = "Virtual Machine names"
-#   default     = ["VM-01"]
-# }
+

@@ -1,5 +1,6 @@
 # Remove after completion
 README_temp.md
+./deployments/
 
 # Secrets
 *.tfvars
