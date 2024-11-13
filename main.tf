@@ -233,7 +233,7 @@ resource "azurerm_storage_blob" "index_html" {
   storage_container_name = "$web" # Special function that allows for static website
   type                   = "Block"
   content_type           = "text/html"
-  source_content         = "${var.source_content} <br> <h3> Workspace: ${terraform.workspace}</h3>" # Content of the website here
+  source_content         = "${local.source_content} <br> <h3> Workspace: ${terraform.workspace}</h3>" # Content of the website here
 }
 
 # Output of the web endpoint so that the user can visit it. 

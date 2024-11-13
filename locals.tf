@@ -9,4 +9,7 @@ locals {
 
   workspace_suffix = terraform.workspace == "default" ? "" : "${terraform.workspace}"
   project_name     = "${var.project_name}${local.workspace_suffix}"
+
+  # Web
+  source_content = "<h1>HEll0 W0rld!</h1>"
 }
