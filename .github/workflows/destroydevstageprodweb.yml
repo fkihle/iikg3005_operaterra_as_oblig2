@@ -1,9 +1,6 @@
 name: Terraform CI/CD - DESTROY
 
 on:
-    push:
-        paths:
-            - '**'
     workflow_dispatch:
 
 env:
