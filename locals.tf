@@ -4,12 +4,12 @@ locals {
     department   = "it"
     project_name = "fk2"
     project_id   = "00042"
-    costcenter   = "${this.department}${this.project_id}"
+    costcenter   = "it-00042"
     environment  = terraform.workspace == "default" ? "" : terraform.workspace
   }
 
   workspace_suffix = terraform.workspace == "default" ? "" : "${terraform.workspace}"
-  project_name     = "${this.project_name}${local.workspace_suffix}"
+  project_name     = "fk2${local.workspace_suffix}"
 
   # Web
   source_content = "<h1>HEll0 W0rld!</h1>"
