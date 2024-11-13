@@ -40,7 +40,35 @@ variable "index_document" {
   default     = "index.html"
 }
 
+# COMMON TAGS
+variable "project_name" {
+  type        = string
+  description = "The name of the project"
+  default     = "fk2"
+}
 
+variable "company_name" {
+  type        = string
+  description = "The name of the company"
+  default     = "Opera Terra AS"
+  
+}
 
+variable "department" {
+  type        = string
+  description = "The department"
+  default     = "it"
+}
 
+variable "project_id" {
+  type        = string
+  description = "The project ID"
+  default     = "00042"
+}
+
+variable "costcenter" {
+  type        = string
+  description = "The cost center"
+  default     = "it-00001"
+}
 
